@@ -43,12 +43,7 @@ class Meeting {
         this.end = end;
     }
 }
-class MeetingComparator implements Comparator<Meeting> {
-    @Override
-    public int compare(Meeting m1, Meeting m2) {
-        return Integer.compare(m1.end, m2.end); // Sort by end time
-    }
-}
+
 class Solution {
     // Function to find the maximum number of meetings that can
     // be performed in a meeting room.
@@ -61,7 +56,8 @@ class Solution {
         }
 
         // Sort meetings by end time
-        Collections.sort(meetings, new MeetingComparator());
+        meetings.sort(Comparator.comparingInt(m -> m.end));
+
 
         int count = 1; // First meeting is always selected
         int lastEndTime = meetings.get(0).end;
