@@ -1,30 +1,69 @@
-class Solution {
-    public Node merge(Node a,Node b){
-        Node temp=new Node(0);
-        Node res=temp;
-        while(a!=null && b!=null){
-            if(a.data<b.data){
-                temp.bottom=a;
-                temp=temp.bottom;
-                a=a.bottom;
+// class Solution {
+//     public Node merge(Node a,Node b){
+//         Node temp=new Node(0);
+//         Node res=temp;
+//         while(a!=null && b!=null){
+//             if(a.data<b.data){
+//                 temp.bottom=a;
+//                 temp=temp.bottom;
+//                 a=a.bottom;
                 
-            }else{
-                temp.bottom=b;
-                temp=temp.bottom;
-                b=b.bottom;
-            }
-        }
-        if(a!=null) temp.bottom=a;
-            else temp.bottom=b;
-            return res.bottom;
-    }
-    // Function to flatten a linked list
+//             }else{
+//                 temp.bottom=b;
+//                 temp=temp.bottom;
+//                 b=b.bottom;
+//             }
+//         }
+//         if(a!=null) temp.bottom=a;
+//             else temp.bottom=b;
+//             return res.bottom;
+//     }
+//     // Function to flatten a linked list
+//     Node flatten(Node root) {
+//       if(root==null || root.next==null){
+//           return root;
+//       }   // code here
+//       root.next=flatten(root.next);
+//       root=merge(root,root.next);
+//       return root;
+//     }
+// }
+class Solution {
     Node flatten(Node root) {
-       if(root==null || root.next==null){
-           return root;
-       }   // code here
-       root.next=flatten(root.next);
-       root=merge(root,root.next);
-       return root;
+
+        if (root == null) return null;
+
+        PriorityQueue<Node> pq = new PriorityQueue<>(
+            (a, b) -> Integer.compare(a.data, b.data)
+        );
+
+        // Add all horizontal heads
+        Node curr = root;
+        while (curr != null) {
+            pq.offer(curr);
+            curr = curr.next;
+        }
+
+        Node dummy = new Node(0);
+        Node tail = dummy;
+
+        while (!pq.isEmpty()) {
+
+            Node node = pq.poll();
+
+            // Add smallest node
+            tail.bottom = node;
+            tail = tail.bottom;
+
+            // If bottom exists, add it
+            if (node.bottom != null) {
+                pq.offer(node.bottom);
+            }
+
+            // Remove next pointer
+            node.next = null;
+        }
+
+        return dummy.bottom;
     }
 }
